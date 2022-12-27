@@ -2,6 +2,7 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request
+from datetime import datetime
 
 
 status = [
@@ -17,6 +18,13 @@ level = [
     {"summer": "1А"},
     {"autumn": "1А"},
     {"spring": ""}
+]
+
+
+state = [
+    {'1': 'успешно удалось отредактировать запись в базе данных'},
+    {'0': 'обновить запись не удалось: редактировать можно все поля,\
+     (кроме ФИО, адрес почты и номер телефона)'}
 ]
 
 
@@ -77,3 +85,20 @@ def update_status():
         with connection.cursor() as cursor:
             cursor.execute(ADD_STATUS, (status,))
     return {'message': f'{status}'}
+
+
+@app.get("/api/pereval_added/<id>")
+def id_pereval():
+    return pereval_added.query.all()
+
+
+@app.patch("/api/pereval_added/<id>")
+def update_pereval():
+    data = request.get_json()
+    if status is 'new':
+        with connection:
+            with connection.cursor() as cursor:
+                cursor.execute(CREATE_TABLE_PEREVAL_ADDED)
+        return {'message': f'{state}'}, 1
+    else:
+        return {'message': f'{state}'}, 0
