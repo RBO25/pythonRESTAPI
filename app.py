@@ -59,12 +59,21 @@ connection = psycopg2.connect(url)
 @app.post("/api/pereval_added")
 def pereval_added():
     data = request.get_json()
-    status = data["status"]
+    pereval_added = data["pereval_added"]
     with connection:
         with connection.cursor() as cursor:
             cursor.execute(CREATE_TABLE_PEREVAL_ADDED)
             cursor.execute(CREATE_USER_TABLE)
             cursor.execute(CREATE_TABLE_COORDS)
             cursor.execute(CREATE_TABLE_IMAGES)
+    return pereval_added
+
+
+@app.post("/api/status")
+def submitData():
+    data = request.get_json()
+    status = data["status"]
+    with connection:
+        with connection.cursor() as cursor:
             cursor.execute(ADD_STATUS, (status,))
     return {'message': f'{status}'}
