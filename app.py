@@ -70,7 +70,7 @@ def pereval_added():
 
 
 @app.post("/api/status")
-def submitData():
+def update_status():
     data = request.get_json()
     status = data["status"]
     with connection:
