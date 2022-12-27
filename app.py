@@ -89,6 +89,11 @@ def update_status():
 
 @app.get("/api/pereval_added/<id>")
 def id_pereval():
+    connection = psycopg2.connect("DATABASE_URL")
+    with connection:
+        with connection.cursor() as cursor:
+            cursor(f'SELECT * FROM pereval_added')
+        return cursor.fetchall()
     return pereval_added.query.all()
 
 
@@ -102,3 +107,12 @@ def update_pereval():
         return {'message': f'{state}'}, 1
     else:
         return {'message': f'{state}'}, 0
+
+
+@app.get("/api/?user__email=<email>")
+def email_id_add_pereval():
+    connection = psycopg2.connect("DATABASE_URL")
+    with connection:
+        with connection.cursor() as cursor:
+            cursor(f'SELECT * FROM pereval_added ORDER BY email_id')
+        return cursor.fetchall()
