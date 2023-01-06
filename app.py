@@ -64,6 +64,7 @@ app = Flask(__name__)
 url = os.getenv("DATABASE_URL")
 connection = psycopg2.connect(url)
 
+
 @app.post("/api/pereval_added")
 def pereval_added():
     data = request.get_json()
