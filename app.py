@@ -1,7 +1,8 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask, request, json
+from flask_swagger_ui import get_swaggerui_blueprint
 
 
 status = [
@@ -64,6 +65,19 @@ url = os.getenv("DATABASE_URL")
 connection = psycopg2.connect(url)
 
 
+SWAGGER_URL = '/docs'
+API_URL = '/swagger'
+
+
+swagger_ui_blueprint = get_swaggerui_blueprint(
+   SWAGGER_URL,
+   API_URL,
+   config={
+       'app_name': 'app'
+   }
+)
+
+
 @app.post("/api/pereval_added")
 def pereval_added():
     data = request.get_json()
@@ -117,3 +131,6 @@ def email_id_add_pereval():
         return cursor.fetchall()
 
 
+@app.route('/swagger')
+def create_swagger_spec():
+   return json.dumps(pereval_added(app).to_dict())
