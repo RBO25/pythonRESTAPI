@@ -2,7 +2,6 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from flask import Flask, request
-from datetime import datetime
 
 
 status = [
@@ -78,8 +77,8 @@ def pereval_added():
     return pereval_added
 
 
-@app.post("/api/status")
-def update_status():
+@app.post("/api/submitData")
+def submitData():
     data = request.get_json()
     status = data["status"]
     with connection:
@@ -88,17 +87,16 @@ def update_status():
     return {'message': f'{status}'}
 
 
-@app.get("/api/pereval_added/<id>")
+@app.get("/api/submitData/<id>")
 def id_pereval():
     connection = psycopg2.connect("DATABASE_URL")
     with connection:
         with connection.cursor() as cursor:
             cursor(f'SELECT * FROM pereval_added')
-        return cursor.fetchall()
     return pereval_added.query.all()
 
 
-@app.patch("/api/pereval_added/<id>")
+@app.patch("/api/submitData/<id>")
 def update_pereval():
     data = request.get_json()
     if status is 'new':
@@ -117,3 +115,5 @@ def email_id_add_pereval():
         with connection.cursor() as cursor:
             cursor(f'SELECT * FROM pereval_added ORDER BY email_id')
         return cursor.fetchall()
+
+
